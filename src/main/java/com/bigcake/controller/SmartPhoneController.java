@@ -1,10 +1,10 @@
 package com.bigcake.controller;
 
 import com.bigcake.model.SmartPhone;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.bigcake.service.PhoneService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -13,11 +13,25 @@ import java.util.List;
 @RestController
 public class SmartPhoneController {
 
+    private final PhoneService mPhoneService;
+
+    @Autowired
+    public SmartPhoneController(PhoneService mPhoneService) {
+        this.mPhoneService = mPhoneService;
+    }
+
     @RequestMapping("/getPhones")
     public List<SmartPhone> getPhones() {
-        return Arrays.asList(
-                new SmartPhone("Samsung A3 2017", "abc-adkklo"),
-                new SmartPhone("Iphone 5", "abc-mmm")
-        );
+        return mPhoneService.getAllPhones();
+    }
+
+    @RequestMapping("/getPhone/{id}")
+    public SmartPhone getPhone(@PathVariable int id) {
+        return mPhoneService.getPhone(id);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/phones")
+    public void addPhone(@RequestBody SmartPhone phone) {
+        mPhoneService.addPhone(phone);
     }
 }
